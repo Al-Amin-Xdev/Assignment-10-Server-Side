@@ -55,7 +55,6 @@ async function run() {
       catch(error){
         console.log(error);
         res.status(500).send({ message: "Failed to fetch data" });
-
       }
     })
 
@@ -98,21 +97,22 @@ async function run() {
     });
 
 
-    // Updating staus
+    app.patch('/allproducts/:id/interest', async (req, res) => {
+    const { id } = req.params;
+    const { userEmail, status } = req.body;
 
-    app.patch(`/allproducts/:id/interest`, async(req, res)=>{
+    try {
+      const result = await ProductCollection.updateOne(
+        { _id: new ObjectId(id), "interest.userEmail": userEmail },
+        { $set: { "interest.$.status": status } }
+      );
 
-      const id = req.params;
-      const {email, status} = req.body;
-
-      const query = {_id: new ObjectId(id)};
-
-      
-
-    })
-
-
-
+      res.send(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Failed to update interest status" });
+    }
+  });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
