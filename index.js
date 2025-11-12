@@ -27,6 +27,11 @@ app.get('/', (req, res) => {
   res.send('Backend server running ✅');
 });
 
+
+
+
+
+
 async function run() {
   try {
 
@@ -81,6 +86,30 @@ async function run() {
       res.send(result);
     })
 
+    // Updating interest
+
+    app.patch('/allproducts/:id', async(req, res)=>{
+      const id = req.params.id;
+      const updateInterest = req.body;
+      const query = {_id: new ObjectId(id)};
+      const update = { $push: { interest: updateInterest } };
+      const result = await ProductCollection.updateOne(query, update);
+      res.send(result);
+    });
+
+
+    // Updating staus
+
+    app.patch(`/allproducts/:id/interest`, async(req, res)=>{
+
+      const id = req.params;
+      const {email, status} = req.body;
+
+      const query = {_id: new ObjectId(id)};
+
+      
+
+    })
 
 
 
